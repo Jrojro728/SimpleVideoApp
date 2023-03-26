@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SimpleVideoApp</string>
+    <string name="title_home">主页</string>
+    <string name="title_upload">上传</string>
+</resources>
