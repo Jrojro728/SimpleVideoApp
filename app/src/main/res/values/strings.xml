@@ -2,4 +2,6 @@
     <string name="app_name">SimpleVideoApp</string>
     <string name="title_home">Home</string>
     <string name="title_upload">Upload</string>
+    <string name="button_upload">Upload video</string>
+    <string name="welcome_upload">Click the button above to upload a video</string>
 </resources>

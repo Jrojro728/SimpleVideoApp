@@ -3,4 +3,7 @@
     <string name="app_name">SimpleVideoApp</string>
     <string name="title_home">主页</string>
     <string name="title_upload">上传</string>
+    <string name="button_upload">上传视频</string>
+    <string name="welcome_upload">点击上方按钮上传视频</string>
+    <string name="error_filenotfind">找不到文件</string>
 </resources>
