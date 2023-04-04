@@ -1,6 +1,10 @@
 package io.github.jrojro728.simplevideoapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -11,10 +15,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import io.github.jrojro728.simplevideoapp.databinding.ActivityMainBinding;
+import io.github.jrojro728.simplevideoapp.utils.FtpUtils;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private int mTag;
+    private FtpUtils ftpUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,4 +41,30 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+    public void onUploadButtonClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, mTag);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            if (requestCode == mTag) {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    // 上传文件
+                    ftpUtils = new FtpUtils();
+                    ftpUtils.Connect();
+                    ftpUtils.UploadFile(uri, this);
+                    ftpUtils.Disconnect();
+                }
+                else {
+                    Toast.makeText(this, R.string.error_filenotfind, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 }

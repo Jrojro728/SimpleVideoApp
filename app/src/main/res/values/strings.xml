@@ -4,4 +4,5 @@
     <string name="title_upload">Upload</string>
     <string name="button_upload">Upload video</string>
     <string name="welcome_upload">Click the button above to upload a video</string>
+    <string name="error_filenotfind">Can\'t find the file</string>
 </resources>
