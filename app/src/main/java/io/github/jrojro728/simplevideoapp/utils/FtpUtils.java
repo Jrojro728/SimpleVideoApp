@@ -1,19 +1,22 @@
 package io.github.jrojro728.simplevideoapp.utils;
 
+import static io.github.jrojro728.simplevideoapp.utils.Utils.getFileAbsolutePath;
+
 import android.content.Context;
 import android.net.Uri;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.io.Util;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FtpUtils {
     //Ftp客户端参数
@@ -25,15 +28,15 @@ public class FtpUtils {
     private FTPClientConfig Config;
 
     public FtpUtils() {
-        Address = "127.0.0.1";
+        Address = "192.168.1.108";
         Username = "ftphome";
-        Password = "1a2b3c4d";
+        Password = "1a2b3c";
     }
 
     public FtpUtils(String address) {
         Address = address;
         Username = "ftphome";
-        Password = "1a2b3c4d";
+        Password = "1a2b3c";
     }
 
     public FtpUtils(String address, String username, String password){
@@ -51,6 +54,7 @@ public class FtpUtils {
         boolean error = false;
         try {
             Client.connect(Address);
+            Client.setFileType(FTP.BINARY_FILE_TYPE);
             reply = Client.getReplyCode();
 
             if(!FTPReply.isPositiveCompletion(reply)) {
@@ -85,12 +89,21 @@ public class FtpUtils {
 
     public boolean UploadFile(Uri uri, Context context) {
         boolean error = false;
-//        try {
-////            InputStream inputStream = new FileInputStream(Utils.getFileFromContentUri(context, uri));
-//        } catch (FileNotFoundException e) {
-//            error = true;
-//            e.printStackTrace();
-//        }
+        try {
+            String FilePath = getFileAbsolutePath(context, uri);
+            InputStream inputFileStream = Files.newInputStream(Paths.get(FilePath));
+            int FileNameCharNumber = FilePath.lastIndexOf("/");
+            String FileName = FilePath;
+            StringBuffer tempStringBuffer = new StringBuffer(FileName);
+
+            tempStringBuffer.delete(0, FileNameCharNumber + 1);
+            FileName = tempStringBuffer.toString();
+
+            Client.storeFile(FileName, inputFileStream);
+        } catch (IOException e) {
+            error = true;
+            e.printStackTrace();
+        }
 
         return error;
     }

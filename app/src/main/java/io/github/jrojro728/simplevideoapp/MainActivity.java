@@ -1,5 +1,6 @@
 package io.github.jrojro728.simplevideoapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,9 +58,15 @@ public class MainActivity extends AppCompatActivity {
                 if (uri != null) {
                     // 上传文件
                     ftpUtils = new FtpUtils();
-                    ftpUtils.Connect();
-                    ftpUtils.UploadFile(uri, this);
-                    ftpUtils.Disconnect();
+                    Context context = this;
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run() {
+                            ftpUtils.Connect();
+                            ftpUtils.UploadFile(uri, context);
+                            ftpUtils.Disconnect();
+                        }
+                    }).start();
                 }
                 else {
                     Toast.makeText(this, R.string.error_filenotfind, Toast.LENGTH_SHORT).show();
