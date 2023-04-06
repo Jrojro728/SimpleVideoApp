@@ -11,7 +11,6 @@ import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -20,12 +19,11 @@ import java.nio.file.Paths;
 
 public class FtpUtils {
     //Ftp客户端参数
-    private String Address;
-    private String Username;
-    private String Password;
+    private final String Address;
+    private final String Username;
+    private final String Password;
 
     private FTPClient Client;
-    private FTPClientConfig Config;
 
     public FtpUtils() {
         Address = "192.168.1.108";
@@ -46,11 +44,11 @@ public class FtpUtils {
     }
 
     public boolean Connect() {
-        Config = new FTPClientConfig(FTPClientConfig.SYST_UNIX);
+        FTPClientConfig config = new FTPClientConfig(FTPClientConfig.SYST_UNIX);
         Client = new FTPClient();
-        Client.configure(Config);
+        Client.configure(config);
 
-        int reply = 0;
+        int reply;
         boolean error = false;
         try {
             Client.connect(Address);
@@ -94,7 +92,7 @@ public class FtpUtils {
             InputStream inputFileStream = Files.newInputStream(Paths.get(FilePath));
             int FileNameCharNumber = FilePath.lastIndexOf("/");
             String FileName = FilePath;
-            StringBuffer tempStringBuffer = new StringBuffer(FileName);
+            StringBuilder tempStringBuffer = new StringBuilder(FileName);
 
             tempStringBuffer.delete(0, FileNameCharNumber + 1);
             FileName = tempStringBuffer.toString();
